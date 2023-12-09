@@ -31,4 +31,8 @@ export class CreateProductDto {
     @Field(type => String)
     @IsNotEmpty({ message: "Imagem é obrigatória!" })
     image: string
+
+    constructor(partial: Partial<CreateProductDto>) {
+        Object.assign(this, partial)
+    }
 }

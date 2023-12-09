@@ -5,16 +5,10 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { EventsModule } from './events/events.module';
+import { StockModule } from './stock/stock.module';
 
 @Module({
   imports: [
-    ProductsModule,
-    EventsModule,
-    GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
-      playground: true,
-      autoSchemaFile: true,
-    }),
     EventEmitterModule.forRoot({
       wildcard: true,
     }),
@@ -27,6 +21,9 @@ import { EventsModule } from './events/events.module';
       password: 'postgres',
       port: 5432,
     }),
+    ProductsModule,
+    EventsModule,
+    StockModule,
   ],
 })
 export class AppModule { }

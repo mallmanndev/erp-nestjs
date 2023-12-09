@@ -1,7 +1,7 @@
 import { Price } from './price';
 import { AdditionalField } from './additional-field';
-import { Characteristic } from './characteristics';
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Dimension } from './dimension';
 
 @Entity({ tableName: "products" })
 export class Product {
@@ -9,11 +9,11 @@ export class Product {
     @PrimaryKey({ type: 'uuid', name: "id" })
     private _id: string;
 
-    @Property({ unique: true, name: "barcode" })
-    private _barcode: string;
+    @Property({ unique: true, name: "barcode", nullable: true })
+    private _barcode: string | null;
 
-    @Property({ unique: true, name: "sku" })
-    private _sku: string;
+    @Property({ unique: true, name: "sku", nullable: true })
+    private _sku: string | null;
 
     @Property({ name: "name" })
     private _name: string;
@@ -22,7 +22,14 @@ export class Product {
     private _description: string;
     private _price: Price;
 
-    private _characteristics: Characteristic;
+    private _gender: string;
+    private _model: string;
+    private _material: string;
+    private _brand: string;
+    private _weight: number;
+    private _size: string;
+    private _color: string;
+    private _dimensions: Dimension;
 
     // Additional
     private _additionalFields: AdditionalField[];
@@ -50,25 +57,13 @@ export class Product {
     ) {
         return new Product({
             _id: crypto.randomUUID(),
-            _barcode: barcode,
-            _sku: sku,
+            _barcode: barcode || null,
+            _sku: sku || null,
             _name: name,
             _description: description,
             _price: price,
             _createdAt: new Date(),
         });
-    }
-
-    async changeCharacteristic(characteristics: Characteristic) {
-        this._characteristics = characteristics;
-    }
-
-    async addAdditionalFields(additionalFields: AdditionalField) {
-        this._additionalFields.push(additionalFields);
-    }
-
-    async removeAdditionalFields(additionalFields: AdditionalField) {
-        this._additionalFields = this._additionalFields.filter((field) => field.name !== additionalFields.name);
     }
 
     // Getters
@@ -96,8 +91,36 @@ export class Product {
         return this._price;
     }
 
-    get characteristics(): Characteristic {
-        return this._characteristics;
+    get gender(): string {
+        return this._gender
+    }
+
+    get model(): string {
+        return this._model;
+    }
+
+    get material(): string {
+        return this._material;
+    }
+
+    get brand(): string {
+        return this._brand;
+    }
+
+    get weight(): number {
+        return this._weight;
+    }
+
+    get size(): string {
+        return this._size;
+    }
+
+    get color(): string {
+        return this._color;
+    }
+
+    get dimensions(): Dimension {
+        return this._dimensions;
     }
 
     get additionalFields(): AdditionalField[] {

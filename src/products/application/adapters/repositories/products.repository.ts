@@ -1,7 +1,7 @@
 import { EntityManager } from "@mikro-orm/postgresql";
 import { Injectable } from "@nestjs/common";
-import { Product } from "src/products/domain/entities/product";
-import { IProductsRepository } from "src/products/domain/ports/products-repository.contract";
+import { Product } from "../../../domain/entities/product";
+import { IProductsRepository } from "../../../domain/ports/products-repository.contract";
 
 @Injectable()
 export class ProductsRepository implements IProductsRepository {
