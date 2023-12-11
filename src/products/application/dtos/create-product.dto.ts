@@ -49,6 +49,12 @@ export class CreateProductDto {
     @Field(type => String, { nullable: true })
     color?: string
 
+    @Field(type => String)
+    quantityType: string
+
+    @Field(type => Number)
+    quantity: number
+
     constructor(partial: Partial<CreateProductDto>) {
         Object.assign(this, partial)
     }

@@ -13,7 +13,9 @@ export class ProductCreatedEvent {
         public readonly description: string,
         public readonly price: Price,
         public readonly createdAt: Date,
+        public readonly quantity: number,
+        public readonly quantityType: string,
     ) {
         this.date = new Date();
-     }
+    }
 }

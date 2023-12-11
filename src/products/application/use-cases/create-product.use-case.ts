@@ -43,6 +43,8 @@ export class CreateProductUseCase {
             product.description,
             product.price,
             product.createdAt,
+            data.quantity,
+            data.quantityType,
         );
 
         this.eventEmitter.emit('product.created', productCreatedEvent)

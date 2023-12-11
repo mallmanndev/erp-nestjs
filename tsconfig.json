@@ -19,8 +19,8 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@/*": ["src/*"],
-      "@products": ["src/products/*"],
-      "@stocks": ["src/stocks/*"],
+      "@products/*": ["src/products/*"],
+      "@stock/*": ["src/stock/*"],
     }
   }
 }

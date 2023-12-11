@@ -10,21 +10,41 @@ export class Stock {
     private _createdAt: Date;
     private _movements: Movement[]
 
-    constructor(data: any) {
-        Object.assign(this, data);
+    constructor(
+        data: Partial<{
+            id: string,
+            productId: string,
+            productName: string,
+            quantityType: string,
+            quantity: number,
+            createdAt: Date,
+            movements: Movement[],
+        }>
+    ) {
+        this._id = data.id;
+        this._productId = data.productId;
+        this._productName = data.productName;
+        this._quantityType = data.quantityType;
+        this._quantity = data.quantity;
+        this._createdAt = data.createdAt;
+        this._movements = data.movements;
     }
 
     static create(productId: string, productName: string, quantityType: string, quantity: number) {
+        if (quantity < 0) {
+            throw new Error("Quantidade inválida.");
+        }
+
         const stock_id = randomUUID();
         const mov = Movement.create(stock_id, quantity, "input");
         const stock = new Stock({
-            _id: stock_id,
-            _productId: productId,
-            _productName: productName,
-            _quantityType: quantityType,
-            _quantity: quantity,
-            _createdAt: new Date(),
-            _movements: [],
+            id: stock_id,
+            productId,
+            productName,
+            quantityType,
+            quantity,
+            createdAt: new Date(),
+            movements: [],
         });
         stock.addMovement(mov);
         return stock;

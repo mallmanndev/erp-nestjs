@@ -11,6 +11,6 @@ export class AllEventsListener {
     async handleEverything(data: any) {
         const { event, date, version } = data;
         const eventEntity = new Event(data.id, event, date, version, JSON.stringify(data))
-        this.eventsRepository.add(eventEntity);
+        await this.eventsRepository.add(eventEntity);
     }
 }
