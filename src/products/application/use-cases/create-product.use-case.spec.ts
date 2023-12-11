@@ -3,22 +3,16 @@ import { CreateProductUseCase } from "./create-product.use-case";
 import { ProductsRepository } from "../adapters/repositories/products.repository";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { CreateProductDto } from "../dtos/create-product.dto";
-import { EntityManager } from "@mikro-orm/postgresql";
 
 describe('CreateProductUseCase', () => {
     let productRepository: ProductsRepository;
     let eventEmitter: EventEmitter2;
-    let entityManager: EntityManager
     let createProductUseCase: CreateProductUseCase;
 
     beforeEach(() => {
         productRepository = new ProductsRepository(null);
         eventEmitter = new EventEmitter2();
-        entityManager = jest.fn().mockImplementation(() => ({
-            persist: jest.fn(),
-            flush: jest.fn()
-        }))()
-        createProductUseCase = new CreateProductUseCase(productRepository, eventEmitter, entityManager);
+        createProductUseCase = new CreateProductUseCase(productRepository, eventEmitter);
     })
 
 
@@ -34,7 +28,6 @@ describe('CreateProductUseCase', () => {
             coastPrice: 10,
             price: 20,
             stock: 10,
-            image: "image.png"
         })
 
         // Assert
@@ -54,7 +47,6 @@ describe('CreateProductUseCase', () => {
             coastPrice: 10,
             price: 20,
             stock: 10,
-            image: "image.png"
         })
 
         // Assert
@@ -76,7 +68,6 @@ describe('CreateProductUseCase', () => {
             coastPrice: 10,
             price: 20,
             stock: 10,
-            image: "image.png"
         })
 
         // Act
@@ -90,7 +81,6 @@ describe('CreateProductUseCase', () => {
         expect(createFn).toHaveBeenCalledWith(product)
         expect(emitSpy).toHaveBeenCalledTimes(1)
         expect(emitSpy).toHaveBeenCalledWith("product.created", expect.anything())
-        expect(entityManager.flush).toHaveBeenCalledTimes(1)
     })
 
     it("Should not validate sku when sku is empty", async () => {
@@ -108,7 +98,6 @@ describe('CreateProductUseCase', () => {
             coastPrice: 10,
             price: 20,
             stock: 10,
-            image: "image.png"
         })
 
         // Act
@@ -122,7 +111,6 @@ describe('CreateProductUseCase', () => {
         expect(createFn).toHaveBeenCalledWith(product)
         expect(emitSpy).toHaveBeenCalledTimes(1)
         expect(emitSpy).toHaveBeenCalledWith("product.created", expect.anything())
-        expect(entityManager.flush).toHaveBeenCalledTimes(1)
     })
 
     it("Should return product when product is created", async () => {
@@ -140,7 +128,6 @@ describe('CreateProductUseCase', () => {
             coastPrice: 10,
             price: 20,
             stock: 10,
-            image: "image.png"
         })
 
         // Act
@@ -152,6 +139,5 @@ describe('CreateProductUseCase', () => {
         expect(createFn).toHaveBeenCalledWith(product)
         expect(emitSpy).toHaveBeenCalledTimes(1)
         expect(emitSpy).toHaveBeenCalledWith("product.created", expect.anything())
-        expect(entityManager.flush).toHaveBeenCalledTimes(1)
     })
 })

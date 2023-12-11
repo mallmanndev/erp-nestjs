@@ -5,7 +5,6 @@ import { Product } from "../../domain/entities/product";
 import { Price } from "../../domain/entities/price";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { ProductCreatedEvent } from "../events/product-created.event";
-import { EntityManager } from "@mikro-orm/postgresql";
 
 @Injectable()
 export class CreateProductUseCase {
@@ -14,20 +13,26 @@ export class CreateProductUseCase {
         @Inject("IProductsRepository")
         private readonly productRepository: IProductsRepository,
         private readonly eventEmitter: EventEmitter2,
-        private readonly em: EntityManager,
     ) { }
 
     async execute(data: CreateProductDto) {
         await this.verifyIfProductAlreadyExists(data.barcode, data.sku);
 
         const price = Price.create(data.price, data.coastPrice, "BRL");
-        const product = Product.create(
-            data.barcode,
-            data.sku,
-            data.name,
-            data.description,
+        const product = Product.create({
+            barcode: data.barcode,
+            sku: data.sku,
+            name: data.name,
+            description: data.description,
             price,
-        )
+            brand: data.brand,
+            color: data.color,
+            gender: data.gender,
+            material: data.material,
+            model: data.model,
+            size: data.size,
+            weight: data.weight,
+        })
         await this.productRepository.create(product);
 
         const productCreatedEvent = new ProductCreatedEvent(
@@ -41,7 +46,6 @@ export class CreateProductUseCase {
         );
 
         this.eventEmitter.emit('product.created', productCreatedEvent)
-        await this.em.flush();
         return product;
     }
 

@@ -28,9 +28,26 @@ export class CreateProductDto {
     @IsNotEmpty({ message: "Estoque é obrigatório!" })
     stock: number
 
-    @Field(type => String)
-    @IsNotEmpty({ message: "Imagem é obrigatória!" })
-    image: string
+    @Field(type => String, { nullable: true })
+    gender?: string
+
+    @Field(type => String, { nullable: true })
+    model?: string
+
+    @Field(type => String, { nullable: true })
+    material?: string
+
+    @Field(type => String, { nullable: true })
+    brand?: string
+
+    @Field(type => Number, { nullable: true })
+    weight?: number
+
+    @Field(type => String, { nullable: true })
+    size?: string
+
+    @Field(type => String, { nullable: true })
+    color?: string
 
     constructor(partial: Partial<CreateProductDto>) {
         Object.assign(this, partial)

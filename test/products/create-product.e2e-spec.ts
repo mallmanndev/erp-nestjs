@@ -3,15 +3,18 @@ import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import * as request from 'supertest';
 import { AppModule } from "../../src/app.module";
+import { PostgreSqlContainer, StartedPostgreSqlContainer } from "@testcontainers/postgresql"
 
 describe("Create Product", () => {
+  jest.setTimeout(10000);
   let app: INestApplication;
+  let postgresContainer: StartedPostgreSqlContainer;
 
   beforeEach(async () => {
+    postgresContainer = await new PostgreSqlContainer().start();
+
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [
-        AppModule,
-      ],
+      imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
@@ -20,6 +23,7 @@ describe("Create Product", () => {
 
   afterAll(async () => {
     await app.close();
+    await postgresContainer.stop();
   });
 
   it("should create a product", () => {

@@ -1,3 +1,5 @@
+import { AdditionalField } from "./additional-field"
+import { Dimension } from "./dimension"
 import { Price } from "./price"
 import { Product } from "./product"
 
@@ -5,14 +7,25 @@ describe("Product", () => {
     describe("create", () => {
         it("should create a product", () => {
             // Arrange
-            const price = Price.create(10, 5, "BRL")
-            const product = Product.create(
-                "Product 1 barcode",
-                "Product 1 sku",
-                "Product 1",
-                "Product 1 description",
-                price,
-            )
+            const product = Product.create({
+                barcode: "Product 1 barcode",
+                sku: "Product 1 sku",
+                name: "Product 1",
+                description: "Product 1 description",
+                price: Price.create(10, 5, "BRL"),
+                brand: "Brand 1",
+                model: "Model 1",
+                color: "Color 1",
+                size: "M",
+                weight: 100,
+                material: "Material 1",
+                gender: "Gender 1",
+                dimensions: Dimension.create(10, 10, 10),
+                additionalFields: [
+                    AdditionalField.create("field 1", "value 1"),
+                    AdditionalField.create("field 2", "value 2"),
+                ],
+            })
 
             // Assert
             expect(product).toBeInstanceOf(Product)
@@ -24,24 +37,5 @@ describe("Product", () => {
             expect(product.price).toBeInstanceOf(Price)
             expect(product.createdAt).not.toBeNull()
         })
-
-        it("should set barcode and sku null when is empty", () => {
-            // Arrange
-            const price = Price.create(10, 5, "BRL")
-            const product = Product.create(
-                "",
-                "",
-                "Product 1",
-                "Product 1 description",
-                price,
-            )
-
-            // Assert
-            expect(product).toBeInstanceOf(Product)
-            expect(product.id).not.toBeNull()
-            expect(product.barcode).toBeNull()
-            expect(product.sku).toBeNull()
-        })
     })
-
 })

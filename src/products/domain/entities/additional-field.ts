@@ -1,16 +1,29 @@
 export class AdditionalField {
-    public name: string
-    public value: string
+    private _name: string
+    private _value: string
 
-    constructor() { }
+    constructor(
+        data: Partial<{
+            name: string,
+            value: string,
+        }>
+    ) {
+        this._name = data.name;
+        this._value = data.value;
+    }
 
     public static create(
         name: string,
         value: string,
     ) {
-        const obj = new AdditionalField();
-        obj.name = name;
-        obj.value = value;
-        return obj;
+        return new AdditionalField({ name, value });
+    }
+
+    get name() {
+        return this._name;
+    }
+
+    get value() {
+        return this._value;
     }
 }

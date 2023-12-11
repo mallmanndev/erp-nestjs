@@ -1,27 +1,14 @@
 import { Price } from './price';
 import { AdditionalField } from './additional-field';
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 import { Dimension } from './dimension';
 
-@Entity({ tableName: "products" })
 export class Product {
-    // Identifiers
-    @PrimaryKey({ type: 'uuid', name: "id" })
     private _id: string;
-
-    @Property({ unique: true, name: "barcode", nullable: true })
-    private _barcode: string | null;
-
-    @Property({ unique: true, name: "sku", nullable: true })
-    private _sku: string | null;
-
-    @Property({ name: "name" })
+    private _barcode: string;
+    private _sku: string;
     private _name: string;
-
-    @Property({ name: 'description' })
     private _description: string;
     private _price: Price;
-
     private _gender: string;
     private _model: string;
     private _material: string;
@@ -30,112 +17,139 @@ export class Product {
     private _size: string;
     private _color: string;
     private _dimensions: Dimension;
-
-    // Additional
     private _additionalFields: AdditionalField[];
-
-    // Timestamps
-    @Property({ name: "created_at" })
     private _createdAt: Date;
-
-    @Property({ name: "updated_at", nullable: true })
     private _updatedAt: Date;
-
-    @Property({ name: "inactived_at", nullable: true })
     private _inactivedAt: Date;
 
-    constructor(data: any) {
-        Object.assign(this, data);
+    constructor(
+        data: Partial<{
+            id: string;
+            barcode: string;
+            sku: string;
+            name: string;
+            description: string;
+            price: Price;
+            gender: string;
+            model: string;
+            material: string;
+            brand: string;
+            weight: number;
+            size: string;
+            color: string;
+            dimensions: Dimension;
+            additionalFields: AdditionalField[];
+            createdAt: Date;
+            updatedAt: Date;
+            inactivedAt: Date;
+        }>
+    ) {
+        this._id = data.id;
+        this._barcode = data.barcode;
+        this._sku = data.sku;
+        this._name = data.name;
+        this._description = data.description;
+        this._price = data.price;
+        this._gender = data.gender
+        this._model = data.model;
+        this._material = data.material;
+        this._brand = data.brand;
+        this._weight = data.weight;
+        this._size = data.size;
+        this._color = data.color;
+        this._dimensions = data.dimensions;
+        this._additionalFields = data.additionalFields;
+        this._createdAt = data.createdAt;
+        this._updatedAt = data.updatedAt;
+        this._inactivedAt = data.inactivedAt;
     }
 
     static create(
-        barcode: string,
-        sku: string,
-        name: string,
-        description: string,
-        price: Price,
+        data: {
+            barcode: string,
+            sku: string,
+            name: string,
+            description: string,
+            price: Price,
+            gender?: string,
+            model?: string,
+            material?: string,
+            brand?: string,
+            weight?: number,
+            size?: string,
+            color?: string,
+            dimensions?: Dimension,
+            additionalFields?: AdditionalField[],
+        }
     ) {
         return new Product({
-            _id: crypto.randomUUID(),
-            _barcode: barcode || null,
-            _sku: sku || null,
-            _name: name,
-            _description: description,
-            _price: price,
-            _createdAt: new Date(),
+            id: crypto.randomUUID(),
+            createdAt: new Date(),
+            ...data
         });
     }
 
-    // Getters
-    get id(): string {
+    get id() {
         return this._id;
     }
 
-    get barcode(): string {
+    get barcode() {
         return this._barcode;
     }
 
-    get sku(): string {
+    get sku() {
         return this._sku;
     }
 
-    get name(): string {
+    get name() {
         return this._name;
     }
 
-    get description(): string {
+    get description() {
         return this._description;
     }
 
-    get price(): Price {
+    get price() {
         return this._price;
     }
 
-    get gender(): string {
+    get gender(){
         return this._gender
     }
 
-    get model(): string {
-        return this._model;
+    get model(){
+        return this._model
     }
 
-    get material(): string {
-        return this._material;
+    get material(){
+        return this._material
     }
 
-    get brand(): string {
-        return this._brand;
+    get brand(){
+        return this._brand
     }
 
-    get weight(): number {
-        return this._weight;
+    get weight(){
+        return this._weight
     }
 
-    get size(): string {
-        return this._size;
+    get size(){
+        return this._size
     }
 
-    get color(): string {
-        return this._color;
+    get color(){
+        return this._color
     }
 
-    get dimensions(): Dimension {
-        return this._dimensions;
+    get dimensions(){
+        return this._dimensions
     }
 
-    get additionalFields(): AdditionalField[] {
-        return this._additionalFields;
+    get additionalFields(){
+        return this._additionalFields
     }
 
-    get createdAt(): Date {
+    get createdAt() {
         return this._createdAt;
-    }
-
-    get updatedAt(): Date {
-        return this._updatedAt;
-    }
-
-    get inactivedAt(): Date {
-        return this._inactivedAt;
     }
 }

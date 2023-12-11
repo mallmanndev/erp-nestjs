@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { Event } from "../entities/event";
-import { EntityManager } from "@mikro-orm/postgresql";
+import { PrismaService } from "@/prisma.service";
 
 @Injectable()
 export class EventsRepository {
-    constructor(private em: EntityManager) { }
+    constructor(private readonly prisma: PrismaService) { }
 
     async add(event: Event): Promise<void> {
-        this.em.persist(event);
+        await this.prisma.event.create({ data: event })
     }
 }

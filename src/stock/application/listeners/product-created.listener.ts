@@ -12,6 +12,7 @@ export class ProductCreatedListener {
         const { event, date, version } = data;
         console.log(`Event: ${event} - Date: ${date} - Version: ${version}`)
         await waitFor(2000);
-        throw new Error('Error in ProductCreatedListener');
+        // throw new Error('Error in ProductCreatedListener');
+        return 'ProductCreatedListener'
     }
 }

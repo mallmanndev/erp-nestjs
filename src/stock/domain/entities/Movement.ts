@@ -1,26 +1,17 @@
-import { Entity, Enum, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { Stock } from "./stock";
+import { randomUUID } from "node:crypto";
 
 export enum MovementType {
     INPUT = "input",
     OUTPUT = "output",
 }
 
-@Entity({ tableName: "stock_movements" })
 export class Movement {
-    @PrimaryKey({ name: "id" })
     private _id: string;
-
-    @ManyToOne(() => Stock, { name: "stock_id" })
     private _stock: Stock;
-
-    @Property({ name: "quantity" })
+    private _stock_id: string;
     private _quantity: number;
-
-    @Enum({ name: "type", items: () => MovementType })
     private _type: "input" | "output";
-
-    @Property({ name: "date" })
     private _date: Date;
 
     constructor(data: any) {
@@ -29,7 +20,7 @@ export class Movement {
 
     static create(stock_id: string, quantity: number, type: string) {
         return new Movement({
-            _id: crypto.randomUUID(),
+            _id: randomUUID(),
             _stock_id: stock_id,
             _quantity: quantity,
             _type: type,
@@ -49,8 +40,8 @@ export class Movement {
         return this._type;
     }
 
-    get stock() {
-        return this._stock;
+    get stock_id() {
+        return this._stock_id;
     }
 
     get date() {

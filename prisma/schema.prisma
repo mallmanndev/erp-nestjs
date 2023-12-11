@@ -21,21 +21,43 @@ model Event {
 }
 
 model Product {
-  id           String    @id @default(uuid())
-  barcode      String?   @unique
-  sku          String?   @unique
-  name         String
-  description  String
-  gender       String?
-  model        String?
-  material     String?
-  brand        String?
-  weight       Float?
-  size         String?
-  color        String?
-  createdAt    DateTime
-  updatedAt    DateTime?
-  inactivedAt  DateTime?
+  id          String    @id @default(uuid())
+  barcode     String?   @unique
+  sku         String?   @unique
+  name        String
+  description String
+  gender      String?
+  model       String?
+  material    String?
+  brand       String?
+  weight      Float?
+  size        String?
+  color       String?
+  createdAt   DateTime
+  updatedAt   DateTime?
+  inactivedAt DateTime?
+
+  prices Price[]
 
   @@map("products")
+}
+
+enum Currency {
+  USD
+  EUR
+  RUB
+  BRL
+}
+
+model Price {
+  id         String   @id @default(uuid())
+  productId  String
+  price      Float
+  coastPrice Float
+  currency   Currency
+  date       DateTime
+
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("prices")
 }

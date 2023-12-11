@@ -1,28 +1,13 @@
-import { Entity, ManyToOne, OneToMany, Property } from "@mikro-orm/core";
 import { Movement } from "./Movement";
+import { randomUUID } from "node:crypto";
 
-@Entity({ tableName: "stock" })
 export class Stock {
-
-    @Property({ primary: true, name: "product_id" })
     private _id: string;
-
-    @Property({ name: "product_id" })
     private _productId: string;
-
-    @Property({ name: "product_name" })
     private _productName: string;
-
-    @Property({ name: "quantity_type" })
     private _quantityType: string;
-
-    @Property({ name: "quantity" })
     private _quantity: number;
-
-    @Property({ name: "createdAt" })
     private _createdAt: Date;
-
-    @OneToMany("Movement", "_stock")
     private _movements: Movement[]
 
     constructor(data: any) {
@@ -30,8 +15,8 @@ export class Stock {
     }
 
     static create(productId: string, productName: string, quantityType: string, quantity: number) {
-        const stock_id = crypto.randomUUID();
-        const mov = Movement.create(stock_id, quantity, "Initial stock");
+        const stock_id = randomUUID();
+        const mov = Movement.create(stock_id, quantity, "input");
         const stock = new Stock({
             _id: stock_id,
             _productId: productId,
@@ -39,6 +24,7 @@ export class Stock {
             _quantityType: quantityType,
             _quantity: quantity,
             _createdAt: new Date(),
+            _movements: [],
         });
         stock.addMovement(mov);
         return stock;
@@ -88,5 +74,9 @@ export class Stock {
 
     get createdAt() {
         return this._createdAt;
+    }
+
+    get movements() {
+        return this._movements;
     }
 }
