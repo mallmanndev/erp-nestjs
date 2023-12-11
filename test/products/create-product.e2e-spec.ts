@@ -3,11 +3,13 @@ import { Test, TestingModule } from "@nestjs/testing";
 import * as request from 'supertest';
 import { AppModule } from "@/app.module";
 import { PostgreSqlContainer, StartedPostgreSqlContainer } from "@testcontainers/postgresql"
+import { PrismaService } from "@/prisma.service";
 
 describe("Create Product", () => {
     jest.setTimeout(10000);
     let app: INestApplication;
     let postgresContainer: StartedPostgreSqlContainer;
+    let prisma: PrismaService
 
     beforeEach(async () => {
         postgresContainer = await new PostgreSqlContainer().start();
@@ -16,8 +18,16 @@ describe("Create Product", () => {
             imports: [AppModule],
         }).compile();
 
+        prisma = moduleFixture.get<PrismaService>(PrismaService);
+
         app = moduleFixture.createNestApplication();
         await app.init();
+
+        await prisma.event.deleteMany()
+        await prisma.stockMovement.deleteMany()
+        await prisma.stock.deleteMany()
+        await prisma.price.deleteMany()
+        await prisma.product.deleteMany()
     })
 
     afterAll(async () => {
@@ -59,7 +69,6 @@ describe("Create Product", () => {
         return request(app.getHttpServer())
             .post("/graphql")
             .send({ query: mutation.toString() }).then(response => {
-                console.log(response.body)
                 expect(response.status).toBe(200)
                 expect(response.body.data.createProduct).toMatchObject({
                     "id": expect.any(String),
