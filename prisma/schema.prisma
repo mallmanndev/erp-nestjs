@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Event {
+  id      String   @id @default(uuid())
+  event   String
+  date    DateTime
+  version Int
+  payload Json
+
+  @@map("events")
+}
+
+model Product {
+  id           String    @id @default(uuid())
+  barcode      String?   @unique
+  sku          String?   @unique
+  name         String
+  description  String
+  gender       String?
+  model        String?
+  material     String?
+  brand        String?
+  weight       Float?
+  size         String?
+  color        String?
+  createdAt    DateTime
+  updatedAt    DateTime?
+  inactivedAt  DateTime?
+
+  @@map("products")
+}
