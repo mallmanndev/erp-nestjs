@@ -78,7 +78,6 @@ export class Product {
             weight?: number,
             size?: string,
             color?: string,
-            dimensions?: Dimension,
             additionalFields?: AdditionalField[],
         }
     ) {
@@ -87,6 +86,31 @@ export class Product {
             createdAt: new Date(),
             ...data
         });
+    }
+
+    update(
+        data: {
+            name: string,
+            description: string,
+            gender?: string,
+            model?: string,
+            material?: string,
+            brand?: string,
+            weight?: number,
+            size?: string,
+            color?: string
+        }
+    ) {
+        this._name = data.name;
+        this._description = data.description;
+        this._gender = data.gender
+        this._model = data.model;
+        this._material = data.material;
+        this._brand = data.brand;
+        this._weight = data.weight;
+        this._size = data.size;
+        this._color = data.color;
+        this._updatedAt = new Date();
     }
 
     get id() {
@@ -113,43 +137,47 @@ export class Product {
         return this._price;
     }
 
-    get gender(){
+    get gender() {
         return this._gender
     }
 
-    get model(){
+    get model() {
         return this._model
     }
 
-    get material(){
+    get material() {
         return this._material
     }
 
-    get brand(){
+    get brand() {
         return this._brand
     }
 
-    get weight(){
+    get weight() {
         return this._weight
     }
 
-    get size(){
+    get size() {
         return this._size
     }
 
-    get color(){
+    get color() {
         return this._color
     }
 
-    get dimensions(){
+    get dimensions() {
         return this._dimensions
     }
 
-    get additionalFields(){
+    get additionalFields() {
         return this._additionalFields
     }
 
     get createdAt() {
         return this._createdAt;
+    }
+
+    get updatedAt() {
+        return this._updatedAt;
     }
 }

@@ -12,6 +12,7 @@
   },
   "moduleNameMapper": {
     "@/(.*)$": "<rootDir>/src/$1",
-    "@stock/(.*)$": "<rootDir>/src/stock/$1"
+    "@stock/(.*)$": "<rootDir>/src/stock/$1",
+    "@products/(.*)$": "<rootDir>/src/products/$1"
   }
 }

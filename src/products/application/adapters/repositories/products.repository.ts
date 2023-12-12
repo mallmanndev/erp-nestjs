@@ -37,7 +37,20 @@ export class ProductsRepository implements IProductsRepository {
     }
 
     async update(product: Product): Promise<void> {
-        await this.prisma.product.update({ where: { id: product.id }, data: product })
+        await this.prisma.product.update({
+            where: { id: product.id }, data: {
+                name: product.name,
+                description: product.description,
+                brand: product.brand,
+                color: product.color,
+                gender: product.gender,
+                material: product.material,
+                model: product.model,
+                size: product.size,
+                weight: product.weight,
+                updatedAt: product.updatedAt,
+            }
+        })
     }
 
     async delete(id: string): Promise<void> {
@@ -60,7 +73,7 @@ export class ProductsRepository implements IProductsRepository {
     }
 
     async findById(id: string): Promise<Product> {
-        // return await this.prisma.product.findUnique({ where: { id } })
-        return null
+        const product = await this.prisma.product.findUnique({ where: { id } })
+        return product ? new Product(product) : null
     }
 }

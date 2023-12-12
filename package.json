@@ -79,7 +79,8 @@
     ],
     "moduleNameMapper": {
       "@/(.*)$": "<rootDir>/$1",
-      "@stock/(.*)$": "<rootDir>/stock/$1"
+      "@stock/(.*)$": "<rootDir>/stock/$1",
+      "@products/(.*)$": "<rootDir>/products/$1"
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
