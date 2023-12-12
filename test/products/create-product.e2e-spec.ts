@@ -2,18 +2,22 @@ import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import * as request from 'supertest';
 import { AppModule } from "@/app.module";
-import { PostgreSqlContainer, StartedPostgreSqlContainer } from "@testcontainers/postgresql"
 import { PrismaService } from "@/prisma.service";
 
 describe("Create Product", () => {
     jest.setTimeout(10000);
     let app: INestApplication;
-    let postgresContainer: StartedPostgreSqlContainer;
     let prisma: PrismaService
 
     beforeEach(async () => {
-        postgresContainer = await new PostgreSqlContainer().start();
+        await prisma.event.deleteMany()
+        await prisma.stockMovement.deleteMany()
+        await prisma.stock.deleteMany()
+        await prisma.price.deleteMany()
+        await prisma.product.deleteMany()
+    })
 
+    beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
         }).compile();
@@ -22,20 +26,13 @@ describe("Create Product", () => {
 
         app = moduleFixture.createNestApplication();
         await app.init();
-
-        await prisma.event.deleteMany()
-        await prisma.stockMovement.deleteMany()
-        await prisma.stock.deleteMany()
-        await prisma.price.deleteMany()
-        await prisma.product.deleteMany()
     })
 
     afterAll(async () => {
         await app.close();
-        await postgresContainer.stop();
     });
 
-    it("should create a product", () => {
+    it("should create a product", async () => {
         const mutation = `
         mutation {
             createProduct(
@@ -66,16 +63,16 @@ describe("Create Product", () => {
         }
         `
 
-        return request(app.getHttpServer())
+        const response = await request(app.getHttpServer())
             .post("/graphql")
-            .send({ query: mutation.toString() }).then(response => {
-                expect(response.status).toBe(200)
-                expect(response.body.data.createProduct).toMatchObject({
-                    "id": expect.any(String),
-                    "name": "Teste",
-                    "description": "Teste",
-                    "createdAt": expect.any(String),
-                })
-            })
+            .send({ query: mutation.toString() })
+
+        expect(response.status).toBe(200)
+        expect(response.body.data.createProduct).toMatchObject({
+            "id": expect.any(String),
+            "name": "Teste",
+            "description": "Teste",
+            "createdAt": expect.any(String),
+        })
     })
 })

@@ -20,6 +20,7 @@ CREATE TABLE "stocks" (
     "quantityType" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL,
+    "updatedAt" TIMESTAMP(3),
 
     CONSTRAINT "stocks_pkey" PRIMARY KEY ("id")
 );

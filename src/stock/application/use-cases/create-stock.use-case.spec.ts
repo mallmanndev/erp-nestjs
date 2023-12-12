@@ -1,6 +1,6 @@
 import { Stock } from "@stock/domain/entities/stock";
 import { CreateStockDTO } from "../dtos/create-stock.dto";
-import { StocksRepository } from "../repositories/in-memory/stocks.repository";
+import { StocksRepository } from "../adapters/repositories/in-memory/stocks.repository";
 import { CreateStockUseCase } from "./create-stock.use-case";
 
 describe("Create Stock", () => {

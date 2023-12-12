@@ -9,6 +9,7 @@ export class Stock {
     private _quantity: number;
     private _createdAt: Date;
     private _movements: Movement[]
+    private _updatedAt: Date;
 
     constructor(
         data: Partial<{
@@ -61,15 +62,20 @@ export class Stock {
         const mov = Movement.create(this._id, quantity, "input");
         this.addMovement(mov);
         this._quantity += quantity;
+        this._updatedAt = new Date();
     }
 
     public output(quantity: number) {
-        if (this._quantity <= 0 || this._quantity < quantity)
+        if (quantity <= 0)
+            throw new Error("Quantidade inválida.");
+
+        if (this._quantity < quantity)
             throw new Error("Estoque insuficiente.");
 
         const mov = Movement.create(this._id, quantity, "output");
         this.addMovement(mov);
         this._quantity -= quantity;
+        this._updatedAt = new Date();
     }
 
     get id() {
@@ -98,5 +104,9 @@ export class Stock {
 
     get movements() {
         return this._movements;
+    }
+
+    get updatedAt() {
+        return this._updatedAt;
     }
 }

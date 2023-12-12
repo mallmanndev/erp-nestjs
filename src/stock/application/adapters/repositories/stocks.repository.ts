@@ -29,8 +29,32 @@ export class StocksRepository implements StocksContract {
         })
     }
 
-    update(stock: Stock): Promise<void> {
-        throw new Error("Method not implemented.");
+    async update(stock: Stock): Promise<void> {
+        await this.prisma.stock.update({
+            data: {
+                productName: stock.productName,
+                quantityType: stock.quantityType,
+                quantity: stock.quantity,
+                updatedAt: stock.updatedAt,
+                movements: {
+                    upsert: stock.movements.map((movement) => ({
+                        where: { id: movement.id },
+                        update: {
+                            type: StockMovementType[movement.type.toUpperCase()],
+                            quantity: movement.quantity,
+                            date: movement.date,
+                        },
+                        create: {
+                            id: movement.id,
+                            type: StockMovementType[movement.type.toUpperCase()],
+                            quantity: movement.quantity,
+                            date: movement.date,
+                        },
+                    })),
+                }
+            },
+            where: { id: stock.id }
+        })
     }
     delete(stock: Stock): Promise<void> {
         throw new Error("Method not implemented.");
@@ -44,6 +68,6 @@ export class StocksRepository implements StocksContract {
             where: { productId },
         });
 
-        return find ? new Stock(find) : null
+        return find ? new Stock({ ...find, movements: [] }) : null
     }
 }

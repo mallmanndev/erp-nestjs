@@ -86,6 +86,7 @@ model Stock {
   quantityType String
   quantity     Int
   createdAt    DateTime
+  updatedAt    DateTime?
 
   product   Product         @relation(fields: [productId], references: [id])
   movements StockMovement[]
