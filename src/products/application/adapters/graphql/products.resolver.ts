@@ -5,13 +5,15 @@ import { CreateProductDto } from "../../dtos/create-product.dto";
 import { PrismaService } from "@/prisma.service";
 import { UpdateProductDto } from "../../dtos/update-product.dto";
 import { UpdateProductUseCase } from "../../use-cases/update-product.use-case";
+import { DeleteProductUseCase } from "../../use-cases/delete-product.use-case";
 
 @Resolver(of => Product)
 export class ProductsResolver {
     constructor(
         private readonly prismaService: PrismaService,
         private readonly createProductUseCase: CreateProductUseCase,
-        private readonly updateProductUseCase: UpdateProductUseCase
+        private readonly updateProductUseCase: UpdateProductUseCase,
+        private readonly deleteProductUseCase: DeleteProductUseCase,
     ) { }
 
     @Query(returns => [Product])
@@ -27,5 +29,10 @@ export class ProductsResolver {
     @Mutation(returns => Product)
     async updateProduct(@Args('data') data: UpdateProductDto) {
         return this.updateProductUseCase.execute(data);
+    }
+
+    @Mutation(returns => Boolean)
+    async deleteProduct(@Args('id') id: string) {
+        return await this.deleteProductUseCase.execute(id);
     }
 }

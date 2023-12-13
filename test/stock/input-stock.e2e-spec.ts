@@ -83,7 +83,6 @@ describe("Input stock", () => {
                     }
                 }
             }
-
         })
 
         const mutation = `

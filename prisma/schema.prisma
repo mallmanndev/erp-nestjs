@@ -35,6 +35,7 @@ model Product {
   color       String?
   createdAt   DateTime
   updatedAt   DateTime?
+  deletedAt   DateTime?
   inactivedAt DateTime?
 
   prices Price[]
@@ -80,13 +81,14 @@ model StockMovement {
 }
 
 model Stock {
-  id           String   @id @default(uuid())
-  productId    String   @unique
+  id           String    @id @default(uuid())
+  productId    String    @unique
   productName  String
   quantityType String
   quantity     Int
   createdAt    DateTime
   updatedAt    DateTime?
+  deletedAt    DateTime?
 
   product   Product         @relation(fields: [productId], references: [id])
   movements StockMovement[]

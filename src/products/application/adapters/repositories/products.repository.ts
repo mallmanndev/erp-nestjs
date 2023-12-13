@@ -49,12 +49,9 @@ export class ProductsRepository implements IProductsRepository {
                 size: product.size,
                 weight: product.weight,
                 updatedAt: product.updatedAt,
+                deletedAt: product.deletedAt,
             }
         })
-    }
-
-    async delete(id: string): Promise<void> {
-        await this.prisma.product.delete({ where: { id } })
     }
 
     async findByBarcode(barcode: string): Promise<Product> {
@@ -73,7 +70,7 @@ export class ProductsRepository implements IProductsRepository {
     }
 
     async findById(id: string): Promise<Product> {
-        const product = await this.prisma.product.findUnique({ where: { id } })
+        const product = await this.prisma.product.findUnique({ where: { id, deletedAt: null } })
         return product ? new Product(product) : null
     }
 }

@@ -20,7 +20,7 @@ export class Product {
     private _additionalFields: AdditionalField[];
     private _createdAt: Date;
     private _updatedAt: Date;
-    private _inactivedAt: Date;
+    private _deletedAt: Date;
 
     constructor(
         data: Partial<{
@@ -41,7 +41,7 @@ export class Product {
             additionalFields: AdditionalField[];
             createdAt: Date;
             updatedAt: Date;
-            inactivedAt: Date;
+            deletedAt: Date;
         }>
     ) {
         this._id = data.id;
@@ -61,7 +61,7 @@ export class Product {
         this._additionalFields = data.additionalFields;
         this._createdAt = data.createdAt;
         this._updatedAt = data.updatedAt;
-        this._inactivedAt = data.inactivedAt;
+        this._deletedAt = data.deletedAt;
     }
 
     static create(
@@ -111,6 +111,10 @@ export class Product {
         this._size = data.size;
         this._color = data.color;
         this._updatedAt = new Date();
+    }
+
+    delete() {
+        this._deletedAt = new Date();
     }
 
     get id() {
@@ -179,5 +183,9 @@ export class Product {
 
     get updatedAt() {
         return this._updatedAt;
+    }
+
+    get deletedAt() {
+        return this._deletedAt;
     }
 }

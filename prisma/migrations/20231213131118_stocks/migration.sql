@@ -1,6 +1,9 @@
 -- CreateEnum
 CREATE TYPE "StockMovementType" AS ENUM ('INPUT', 'OUTPUT');
 
+-- AlterTable
+ALTER TABLE "products" ADD COLUMN     "deletedAt" TIMESTAMP(3);
+
 -- CreateTable
 CREATE TABLE "stock_movements" (
     "id" TEXT NOT NULL,
@@ -21,6 +24,7 @@ CREATE TABLE "stocks" (
     "quantity" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL,
     "updatedAt" TIMESTAMP(3),
+    "deletedAt" TIMESTAMP(3),
 
     CONSTRAINT "stocks_pkey" PRIMARY KEY ("id")
 );
