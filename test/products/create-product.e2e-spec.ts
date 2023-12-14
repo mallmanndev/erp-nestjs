@@ -43,8 +43,8 @@ describe("Create Product", () => {
         mutation {
             createProduct(
                 data: {
-                    barcode: "",
-                    sku: "",
+                    barcode: "12345678",
+                    sku: "12345678",
                     name: "Teste",
                     description: "Teste",
                     price: 12,

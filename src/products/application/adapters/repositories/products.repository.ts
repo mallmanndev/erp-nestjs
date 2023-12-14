@@ -62,22 +62,35 @@ export class ProductsRepository implements IProductsRepository {
     }
 
     async findByBarcode(barcode: string): Promise<Product> {
-        // return await this.prisma.product.findUnique({ where: { barcode } })
-        return null
+        const product = await this.prisma.product.findFirst({
+            where: {
+                barcode,
+                tenantId: this.tenantService.tenantId,
+                deletedAt: null
+            }
+        })
+        return product ? new Product(product) : null
     }
 
     async findBySku(sku: string): Promise<Product> {
-        // return await this.prisma.product.findUnique({ where: { sku } })
-        return null
-    }
-
-    async findAll(): Promise<Product[]> {
-        // return await this.prisma.product.findMany()
-        return null
+        const product = await this.prisma.product.findFirst({
+            where: {
+                sku,
+                tenantId: this.tenantService.tenantId,
+                deletedAt: null,
+            }
+        })
+        return product ? new Product(product) : null
     }
 
     async findById(id: string): Promise<Product> {
-        const product = await this.prisma.product.findUnique({ where: { id, deletedAt: null } })
+        const product = await this.prisma.product.findUnique({
+            where: {
+                id,
+                tenantId: this.tenantService.tenantId,
+                deletedAt: null,
+            }
+        })
         return product ? new Product(product) : null
     }
 }

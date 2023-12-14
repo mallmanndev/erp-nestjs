@@ -1,5 +1,4 @@
 import { Module } from "@nestjs/common";
-import { ProductsController } from "./application/adapters/rest/products.controller";
 import { ProductsRepository } from "./application/adapters/repositories/products.repository";
 import { CreateProductUseCase } from "./application/use-cases/create-product.use-case";
 import { UpdateProductUseCase } from "./application/use-cases/update-product.use-case";
@@ -9,7 +8,6 @@ import { ProductsResolver } from "./application/adapters/graphql/products.resolv
 
 @Module({
     imports: [StockModule],
-    controllers: [ProductsController],
     providers: [
         CreateProductUseCase,
         UpdateProductUseCase,

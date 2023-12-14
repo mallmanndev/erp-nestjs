@@ -1,6 +1,5 @@
 import { IProductsRepository } from "@/products/domain/ports/products-repository.contract";
-import { UpdateProductDto } from "../dtos/update-product.dto";
-import { Product } from "@products/domain/entities/product";
+import { UpdateProductDto, UpdateProductOutputDto } from "../dtos/update-product.dto";
 import { ProductAlteredEvent } from "../events/product-altered.event";
 import { EventEmitter2 } from "@nestjs/event-emitter";
 import { Inject, Injectable } from "@nestjs/common";
@@ -13,7 +12,7 @@ export class UpdateProductUseCase {
         private readonly eventEmmiter: EventEmitter2,
     ) { }
 
-    async execute(data: UpdateProductDto): Promise<Product> {
+    async execute(data: UpdateProductDto) {
         const product = await this.productRepository.findById(data.id);
         if (!product) {
             throw new Error('Produto não encontrado');
@@ -36,6 +35,17 @@ export class UpdateProductUseCase {
         )
         this.eventEmmiter.emit(event.event, event);
 
-        return product
+        return new UpdateProductOutputDto({
+            id: product.id,
+            name: product.name,
+            description: product.description,
+            gender: product.gender,
+            model: product.model,
+            material: product.material,
+            brand: product.brand,
+            weight: product.weight,
+            size: product.size,
+            color: product.color,
+        })
     }
 }

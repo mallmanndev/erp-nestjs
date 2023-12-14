@@ -8,34 +8,46 @@ describe('Stock', () => {
         jest.spyOn(crypto, 'randomUUID').mockReturnValue(stockId)
     })
 
-    it('should create a new stock instance', () => {
-        const stockData = {
-            productId: '123',
-            productName: 'Test Product',
-            quantityType: 'units',
-            quantity: 50,
-        };
-        const stock = Stock.create(
-            stockData.productId,
-            stockData.productName,
-            stockData.quantityType,
-            stockData.quantity
-        );
+    describe('create', () => {
+        it("Should throw an error when quantity is less than 0", () => {
+            expect(() => Stock.create(
+                "123",
+                "Test Product",
+                "units",
+                -10
+            )).toThrow('Quantidade inválida.')
+        })
 
-        expect(stock).toBeInstanceOf(Stock);
-        expect(stock.id).toBe(stockId)
-        expect(stock.productId).toBe(stockData.productId);
-        expect(stock.productName).toBe(stockData.productName);
-        expect(stock.quantityType).toBe(stockData.quantityType);
-        expect(stock.quantity).toBe(stockData.quantity);
-        expect(stock.createdAt).toBeInstanceOf(Date);
-        expect(stock.movements).toHaveLength(1);
-        expect(stock.movements[0].id).toBe(stockId);
-        expect(stock.movements[0].type).toBe('input')
-        expect(stock.movements[0].quantity).toBe(stockData.quantity)
-        expect(stock.movements[0].date).toBeInstanceOf(Date);
-        expect(stock.movements[0].stock_id).toBe(stockId)
-    });
+        it('should create a new stock instance', () => {
+            const stockData = {
+                productId: '123',
+                productName: 'Test Product',
+                quantityType: 'units',
+                quantity: 50,
+            };
+            const stock = Stock.create(
+                stockData.productId,
+                stockData.productName,
+                stockData.quantityType,
+                stockData.quantity
+            );
+
+            expect(stock).toBeInstanceOf(Stock);
+            expect(stock.id).toBe(stockId)
+            expect(stock.productId).toBe(stockData.productId);
+            expect(stock.productName).toBe(stockData.productName);
+            expect(stock.quantityType).toBe(stockData.quantityType);
+            expect(stock.quantity).toBe(stockData.quantity);
+            expect(stock.createdAt).toBeInstanceOf(Date);
+            expect(stock.movements).toHaveLength(1);
+            expect(stock.movements[0].id).toBe(stockId);
+            expect(stock.movements[0].type).toBe('input')
+            expect(stock.movements[0].quantity).toBe(stockData.quantity)
+            expect(stock.movements[0].date).toBeInstanceOf(Date);
+            expect(stock.movements[0].stock_id).toBe(stockId)
+        });
+    })
+
 
     it('should add input movement to stock', () => {
         const stockData = {

@@ -64,12 +64,6 @@ export class StocksRepository implements StocksContract {
             where: { id: stock.id }
         })
     }
-    delete(stock: Stock): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
-    findById(id: string): Promise<Stock> {
-        throw new Error("Method not implemented.");
-    }
 
     async findByProductId(productId: string): Promise<Stock> {
         const find = await this.prisma.stock.findUnique({

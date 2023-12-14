@@ -169,14 +169,6 @@ export class Product {
         return this._color
     }
 
-    get dimensions() {
-        return this._dimensions
-    }
-
-    get additionalFields() {
-        return this._additionalFields
-    }
-
     get createdAt() {
         return this._createdAt;
     }

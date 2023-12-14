@@ -18,9 +18,4 @@ export class EventsRepository {
             }
         })
     }
-
-    async getAll(): Promise<any[]> {
-        const events = await this.prisma.event.findMany()
-        return events
-    }
 }

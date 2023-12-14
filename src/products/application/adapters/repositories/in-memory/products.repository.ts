@@ -20,17 +20,8 @@ export class InMemoryProductsRepository implements IProductsRepository {
         return this.products.find(product => product.id === id);
     }
 
-    async findAll() {
-        return this.products;
-    }
-
     async update(product: Product) {
         const productIndex = this.products.findIndex(p => p.id === product.id);
         this.products[productIndex] = product;
-    }
-
-    async delete(id: string) {
-        const productIndex = this.products.findIndex(p => p.id === id);
-        this.products.splice(productIndex, 1);
     }
 }

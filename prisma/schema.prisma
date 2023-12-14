@@ -5,6 +5,11 @@ generator client {
   provider = "prisma-client-js"
 }
 
+generator where-required {
+  provider       = "prisma-where-required"
+  nodeModulePath = "node_modules"
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -45,7 +50,7 @@ model User {
 
 model Event {
   id       String   @id @default(uuid())
-  tenantId String   /// @where-requied
+  tenantId String /// @where-required
   event    String
   date     DateTime
   version  Int
@@ -58,7 +63,7 @@ model Event {
 
 model Product {
   id          String    @id @default(uuid())
-  tenantId    String
+  tenantId    String /// @where-required
   barcode     String?   @unique
   sku         String?   @unique
   name        String
