@@ -10,18 +10,55 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Tentan {
+  id        String    @id
+  name      String
+  createdAt DateTime
+  updatedAt DateTime?
+  deletedAt DateTime?
+
+  users          User[]
+  events         Event[]
+  products       Product[]
+  prices         Price[]
+  stocks         Stock[]
+  stockMovements StockMovement[]
+
+  @@map("tentans")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  tentanId  String
+  email     String    @unique
+  firstName String
+  lastName  String
+  password  String
+  createdAt DateTime
+  updatedAt DateTime?
+  deletedAt DateTime?
+
+  tentan Tentan @relation(fields: [tentanId], references: [id])
+
+  @@map("users")
+}
+
 model Event {
-  id      String   @id @default(uuid())
-  event   String
-  date    DateTime
-  version Int
-  payload Json
+  id       String   @id @default(uuid())
+  tenantId String   /// @where-requied
+  event    String
+  date     DateTime
+  version  Int
+  payload  Json
+
+  tenant Tentan @relation(fields: [tenantId], references: [id])
 
   @@map("events")
 }
 
 model Product {
   id          String    @id @default(uuid())
+  tenantId    String
   barcode     String?   @unique
   sku         String?   @unique
   name        String
@@ -40,6 +77,7 @@ model Product {
 
   prices Price[]
   stocks Stock[]
+  tenant Tentan  @relation(fields: [tenantId], references: [id])
 
   @@map("products")
 }
@@ -53,6 +91,7 @@ enum Currency {
 
 model Price {
   id         String   @id @default(uuid())
+  tenantId   String
   productId  String
   price      Float
   coastPrice Float
@@ -60,6 +99,7 @@ model Price {
   date       DateTime
 
   product Product @relation(fields: [productId], references: [id])
+  tenant  Tentan  @relation(fields: [tenantId], references: [id])
 
   @@map("prices")
 }
@@ -71,17 +111,21 @@ enum StockMovementType {
 
 model StockMovement {
   id       String            @id @default(uuid())
+  tenantId String
   quantity Int
   date     DateTime
   type     StockMovementType
   stockId  String
   stock    Stock             @relation(fields: [stockId], references: [id])
 
+  tenant Tentan @relation(fields: [tenantId], references: [id])
+
   @@map("stock_movements")
 }
 
 model Stock {
   id           String    @id @default(uuid())
+  tenantId     String
   productId    String    @unique
   productName  String
   quantityType String
@@ -92,6 +136,7 @@ model Stock {
 
   product   Product         @relation(fields: [productId], references: [id])
   movements StockMovement[]
+  tenant    Tentan          @relation(fields: [tenantId], references: [id])
 
   @@map("stocks")
 }

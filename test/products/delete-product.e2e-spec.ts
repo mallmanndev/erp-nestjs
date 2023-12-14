@@ -1,12 +1,15 @@
 import { AppModule } from "@/app.module";
-import { PrismaService } from "@/prisma.service";
+import { PrismaService } from "@prisma_module/prisma.service";
 import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import * as request from 'supertest';
+import { JwtService } from "@nestjs/jwt";
 
 describe("Test deleteProduct mutation", () => {
     let app: INestApplication;
     let prisma: PrismaService
+    let jwtService: JwtService;
+    let token: string
 
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -14,6 +17,9 @@ describe("Test deleteProduct mutation", () => {
         }).compile();
 
         prisma = moduleFixture.get<PrismaService>(PrismaService);
+        jwtService = moduleFixture.get<JwtService>(JwtService);
+
+        token = await jwtService.signAsync({ sub: "123", email: "email@email.com", tenant: "default" })
 
         app = moduleFixture.createNestApplication();
         await app.init();
@@ -33,15 +39,16 @@ describe("Test deleteProduct mutation", () => {
         await prisma.product.create({
             data: {
                 id: "123",
+                tenantId: "default",
                 name: "Teste",
                 description: "Teste",
                 createdAt: new Date(),
-                updatedAt: new Date(),
             }
         })
         await prisma.stock.create({
             data: {
                 id: "1",
+                tenantId: "default",
                 createdAt: new Date(),
                 productId: "123",
                 productName: "Teste",
@@ -53,15 +60,16 @@ describe("Test deleteProduct mutation", () => {
         await prisma.product.create({
             data: {
                 id: "123456",
+                tenantId: "default",
                 name: "Teste",
                 description: "Teste",
                 createdAt: new Date(),
-                updatedAt: new Date(),
             }
         })
         await prisma.stock.create({
             data: {
                 id: "2",
+                tenantId: "default",
                 createdAt: new Date(),
                 productId: "123456",
                 productName: "Teste",
@@ -80,6 +88,7 @@ describe("Test deleteProduct mutation", () => {
 
         const { body } = await request(app.getHttpServer())
             .post("/graphql")
+            .set("Authorization", `Bearer ${token}`)
             .send({ query: mutation })
 
         expect(body.errors[0].message).toBe("Produto não encontrado")
@@ -94,6 +103,7 @@ describe("Test deleteProduct mutation", () => {
 
         const { body } = await request(app.getHttpServer())
             .post("/graphql")
+            .set("Authorization", `Bearer ${token}`)
             .send({ query: mutation })
 
         expect(body.errors[0].message).toBe("Produto possui estoque")
@@ -108,6 +118,7 @@ describe("Test deleteProduct mutation", () => {
 
         const { body } = await request(app.getHttpServer())
             .post("/graphql")
+            .set("Authorization", `Bearer ${token}`)
             .send({ query: mutation })
 
         expect(body.data.deleteProduct).toBeTruthy()

@@ -1,12 +1,16 @@
 import { AppModule } from "@/app.module";
-import { PrismaService } from "@/prisma.service";
+import { PrismaService } from "@prisma_module/prisma.service";
 import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import * as request from 'supertest';
+import { JwtService } from "@nestjs/jwt";
+
 
 describe("Output stock", () => {
     let app: INestApplication;
     let prisma: PrismaService
+    let jwtService: JwtService;
+    let token: string
 
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -14,6 +18,9 @@ describe("Output stock", () => {
         }).compile();
 
         prisma = moduleFixture.get<PrismaService>(PrismaService);
+        jwtService = moduleFixture.get<JwtService>(JwtService);
+
+        token = await jwtService.signAsync({ sub: "123", email: "email@email.com", tenant: "default" })
 
         app = moduleFixture.createNestApplication();
         await app.init();
@@ -33,6 +40,7 @@ describe("Output stock", () => {
         await prisma.product.create({
             data: {
                 id: "1",
+                tenantId: "default",
                 name: "Teste",
                 description: "Teste",
                 createdAt: new Date(),
@@ -41,6 +49,7 @@ describe("Output stock", () => {
         await prisma.stock.create({
             data: {
                 id: "1",
+                tenantId: "default",
                 createdAt: new Date(),
                 productId: "1",
                 productName: "Teste",
@@ -49,6 +58,7 @@ describe("Output stock", () => {
                 movements: {
                     create: {
                         id: "1",
+                        tenantId: "default",
                         date: new Date(),
                         type: "INPUT",
                         quantity: 2,
@@ -79,6 +89,7 @@ describe("Output stock", () => {
 
         return request(app.getHttpServer())
             .post('/graphql')
+            .set("Authorization", `Bearer ${token}`)
             .send({ query: mutation })
             .expect(({ body }) => {
                 expect(body.errors[0].message).toBe("Estoque não existe.")
@@ -105,6 +116,7 @@ describe("Output stock", () => {
 
         return request(app.getHttpServer())
             .post('/graphql')
+            .set("Authorization", `Bearer ${token}`)
             .send({ query: mutation })
             .expect(({ body }) => {
                 expect(body.errors[0].message).toBe("Estoque insuficiente.")
@@ -131,6 +143,7 @@ describe("Output stock", () => {
 
         const { body } = await request(app.getHttpServer())
             .post('/graphql')
+            .set("Authorization", `Bearer ${token}`)
             .send({ query: mutation })
 
         expect(body.data.outputStock.stockId).toBe("1")

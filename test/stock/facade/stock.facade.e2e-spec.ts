@@ -1,5 +1,5 @@
 import { AppModule } from "@/app.module";
-import { PrismaService } from "@/prisma.service";
+import { PrismaService } from "@prisma_module/prisma.service";
 import { StockFacade } from "@/stock/application/facade/stock.facade";
 import { Stock } from "@/stock/domain/entities/stock";
 import { INestApplication } from "@nestjs/common";
@@ -29,6 +29,7 @@ describe("Test StockFacade", () => {
         await prisma.product.create({
             data: {
                 id: "1",
+                tenantId: "default",
                 name: "Teste",
                 description: "Teste",
                 createdAt: new Date(),
@@ -37,6 +38,7 @@ describe("Test StockFacade", () => {
         await prisma.stock.create({
             data: {
                 id: "1",
+                tenantId: "default",
                 createdAt: new Date(),
                 productId: "1",
                 productName: "Teste",
@@ -45,6 +47,7 @@ describe("Test StockFacade", () => {
                 movements: {
                     create: {
                         id: "1",
+                        tenantId: "default",
                         date: new Date(),
                         type: "INPUT",
                         quantity: 2,

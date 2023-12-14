@@ -2,12 +2,15 @@ import { Args, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { Product } from "./models/product.model";
 import { CreateProductUseCase } from "../../use-cases/create-product.use-case";
 import { CreateProductDto } from "../../dtos/create-product.dto";
-import { PrismaService } from "@/prisma.service";
+import { PrismaService } from "@prisma_module/prisma.service";
 import { UpdateProductDto } from "../../dtos/update-product.dto";
 import { UpdateProductUseCase } from "../../use-cases/update-product.use-case";
 import { DeleteProductUseCase } from "../../use-cases/delete-product.use-case";
+import { UseGuards } from "@nestjs/common";
+import { AuthGraphqlGuard } from "@auth/auth-graphql.guard";
 
 @Resolver(of => Product)
+@UseGuards(AuthGraphqlGuard)
 export class ProductsResolver {
     constructor(
         private readonly prismaService: PrismaService,

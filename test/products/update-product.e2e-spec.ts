@@ -1,12 +1,15 @@
 import { AppModule } from "@/app.module";
-import { PrismaService } from "@/prisma.service";
+import { PrismaService } from "@prisma_module/prisma.service";
 import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from "@nestjs/testing";
 import * as request from 'supertest';
+import { JwtService } from "@nestjs/jwt";
 
 describe("Update Product", () => {
     let app: INestApplication;
     let prisma: PrismaService
+    let jwtService: JwtService;
+    let token: string
 
     beforeAll(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -14,6 +17,9 @@ describe("Update Product", () => {
         }).compile();
 
         prisma = moduleFixture.get<PrismaService>(PrismaService);
+        jwtService = moduleFixture.get<JwtService>(JwtService);
+
+        token = await jwtService.signAsync({ sub: "123", email: "email@email.com", tenant: "default" })
 
         app = moduleFixture.createNestApplication();
         await app.init();
@@ -33,10 +39,10 @@ describe("Update Product", () => {
         await prisma.product.create({
             data: {
                 id: "123",
+                tenantId: "default",
                 name: "Teste",
                 description: "Teste",
                 createdAt: new Date(),
-                updatedAt: new Date(),
             }
         })
     })
@@ -60,6 +66,7 @@ describe("Update Product", () => {
 
         const { body } = await request(app.getHttpServer())
             .post("/graphql")
+            .set("Authorization", `Bearer ${token}`)
             .send({ query: mutation })
 
         expect(body.errors[0].message).toBe("Produto não encontrado")
@@ -83,6 +90,7 @@ describe("Update Product", () => {
         `
         const { body } = await request(app.getHttpServer())
             .post("/graphql")
+            .set("Authorization", `Bearer ${token}`)
             .send({ query: mutation })
 
         expect(body.data.updateProduct.name).toBe("Teste altered")

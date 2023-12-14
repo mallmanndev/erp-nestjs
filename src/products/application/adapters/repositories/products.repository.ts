@@ -1,12 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { Product } from "../../../domain/entities/product";
 import { IProductsRepository } from "../../../domain/ports/products-repository.contract";
-import { PrismaService } from "@/prisma.service";
+import { PrismaService } from "@prisma_module/prisma.service";
 import { Currency } from "@prisma/client";
+import { TenantService } from "@tenant/tenant.service";
 
 @Injectable()
 export class ProductsRepository implements IProductsRepository {
-    constructor(private readonly prisma: PrismaService) { }
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly tenantService: TenantService,
+    ) { }
 
     async create(product: Product): Promise<void> {
         await this.prisma.product.create({
@@ -24,12 +28,14 @@ export class ProductsRepository implements IProductsRepository {
                 size: product.size,
                 weight: product.weight,
                 createdAt: product.createdAt,
+                tenantId: this.tenantService.tenantId,
                 prices: {
                     create: {
                         price: product.price.price,
                         coastPrice: product.price.coastPrice,
                         currency: product.price.currency as Currency,
                         date: product.price.date,
+                        tenantId: this.tenantService.tenantId,
                     }
                 }
             }
@@ -50,6 +56,7 @@ export class ProductsRepository implements IProductsRepository {
                 weight: product.weight,
                 updatedAt: product.updatedAt,
                 deletedAt: product.deletedAt,
+                tenantId: this.tenantService.tenantId,
             }
         })
     }

@@ -19,8 +19,11 @@
     "noFallthroughCasesInSwitch": false,
     "paths": {
       "@/*": ["src/*"],
+      "@prisma_module/*": ["src/prisma/*"],
       "@products/*": ["src/products/*"],
       "@stock/*": ["src/stock/*"],
+      "@tenant/*": ["src/tenant/*"],
+      "@auth/*": ["src/auth/*"],
     }
   }
 }

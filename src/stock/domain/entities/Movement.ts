@@ -1,4 +1,3 @@
-import { Stock } from "./stock";
 import { randomUUID } from "node:crypto";
 
 export enum MovementType {
@@ -8,7 +7,6 @@ export enum MovementType {
 
 export class Movement {
     private _id: string;
-    private _stock: Stock;
     private _stock_id: string;
     private _quantity: number;
     private _type: "input" | "output";

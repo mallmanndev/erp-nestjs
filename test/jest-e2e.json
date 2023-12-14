@@ -12,7 +12,10 @@
   },
   "moduleNameMapper": {
     "@/(.*)$": "<rootDir>/src/$1",
+    "@prisma_module/(.*)$": "<rootDir>/src/prisma/$1",
     "@stock/(.*)$": "<rootDir>/src/stock/$1",
-    "@products/(.*)$": "<rootDir>/src/products/$1"
+    "@products/(.*)$": "<rootDir>/src/products/$1",
+    "@tenant/(.*)$": "<rootDir>/src/tenant/$1",
+    "@auth/(.*)$": "<rootDir>/src/auth/$1"
   }
 }
